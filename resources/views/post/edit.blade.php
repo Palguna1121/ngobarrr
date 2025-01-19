@@ -1,6 +1,12 @@
 {{-- halaman edit data post --}}
 <h1>Edit Post</h1>
 
+@if (session()->has('sukses'))
+    <p>{{ session('sukses') }}</p>
+@elseif (session()->has('error'))
+    <p>{{ session('error') }}</p>
+@endif
+
 <form action="{{ route('post.update', $post->id) }}" method="post">
     @csrf
     @method('PUT')
@@ -23,5 +29,5 @@
         <p>{{ $errors->first('category') }}</p>
     @endif
 
-    <button type="submit">Update</button>
+    <button type="submit">Update Data</button>
 </form>

@@ -18,9 +18,9 @@
 
     <label for="category">Category</label>
     <input type="text" name="category" id="category">
-    @if ($errors->has('category'))
+    @if ($errors->has('category'))  
         <p>{{ $errors->first('category') }}</p>
     @endif
 
-    <button type="submit">Submit</button>
+    <button type="submit">Create</button>
 </form>
