@@ -6,7 +6,9 @@ use Exception;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Cache\Store;
 use App\Http\Requests\StorePostsRequest;
+use App\Http\Requests\UpdatePostsRequest;
 use Dotenv\Exception\ValidationException;
 
 class PostsController extends Controller
@@ -31,28 +33,15 @@ class PostsController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(StorePostsRequest $request)
     {
         try {
-            $request->validate([
-                "title" => "required|string|max:20|min:5",
-                "description" => "required|string",
-                "category" => "required|string",
-            ], [
-                "title.required" => "Judul Tidak Bole Kosong Bro!😊",
-                "title.string" => "Judul harus berupa string",
-                "title.min" => "Judul minimal 5 karakter!😊",
-                "title.max" => "Judul maksimal 20 karakter!😊",
-                "description.required" => "Deskripsi Tidak Bole Kosong Bro!😊",
-                "description.string" => "Deskripsi harus berupa string",
-                "category.required" => "Kategori Tidak Bole Kosong Bro!😊",
-                "category.string" => "Kategori harus berupa string",
-            ]);
             Post::create([
                 "title" => $request->title,
                 "description" => $request->description,
                 "category" => $request->category,
             ]);
+
             return response()->json([
                 "code" => 201,
                 "success" => true,
@@ -95,37 +84,25 @@ class PostsController extends Controller
         }
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdatePostsRequest $request, string $id)
     {
         try {
             $post = Post::find($id);
+
             if (!$post) {
                 return response()->json([
                     "code" => 404,
-                    "data" => null,
                     "success" => false,
                     "message" => "Data post tidak ditemukan!"
                 ], 404);
             }
-            $request->validate([
-                "title" => "required|string|max:20|min:5",
-                "description" => "required|string",
-                "category" => "required|string",
-            ], [
-                "title.required" => "Judul Tidak Bole Kosong Bro!😊",
-                "title.string" => "Judul harus berupa string",
-                "title.min" => "Judul minimal 5 karakter!😊",
-                "title.max" => "Judul maksimal 20 karakter!😊",
-                "description.required" => "Deskripsi Tidak Bole Kosong Bro!😊",
-                "description.string" => "Deskripsi harus berupa string",
-                "category.required" => "Kategori Tidak Bole Kosong Bro!😊",
-                "category.string" => "Kategori harus berupa string",
-            ]);
+
             $post->update([
                 "title" => $request->title,
                 "description" => $request->description,
                 "category" => $request->category,
             ]);
+
             return response()->json([
                 "code" => 200,
                 "success" => true,
